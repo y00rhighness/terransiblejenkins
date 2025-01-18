@@ -10,6 +10,9 @@ resource "aws_vpc" "mtc_vpc" {
     tags = {
         Name = "mtc_vpc-${random_id.random.dec}"
     }
+    lifecycle {
+        create_before_destroy = true
+    }
 }
 
 resource "aws_internet_gateway" "mtc_internet_gateway" {
