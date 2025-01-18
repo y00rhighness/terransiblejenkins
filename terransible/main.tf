@@ -22,3 +22,28 @@ resource "aws_internet_gateway" "mtc_internet_gateway" {
         Name = "mtc_igw-${random_id.random.dec}"
     }
 }
+
+resource "aws_route_table" "mtc_public_route" {
+    vpc_id = aws_vpc.mtc_vpc.id
+
+    tags = {
+        Name = "mtc-public-route"
+    }
+}
+
+resource "aws_route" "default_route" {
+    route_table_id = aws_route_table.mtc_public_route.id
+    destination_cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.mtc_internet_gateway.id
+}
+
+resource "aws_default_route_table" "mtc_private_route" {
+    default_route_table_id = aws_vpc.mtc_vpc.default_route_table_id
+
+    tags = {
+        Name = "mtc_private"
+    }
+}
+
+data "aws_availability_zones" "available" {
+}
