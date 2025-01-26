@@ -47,3 +47,27 @@ resource "aws_default_route_table" "mtc_private_route" {
 
 data "aws_availability_zones" "available" {
 }
+
+resource "aws_subnet" "mtc_public_subnet" {
+  count = length(var.public_cidrs)
+  vpc_id = aws_vpc.mtc_vpc.id
+  cidr_block = var.public_cidrs[count.index]
+  map_public_ip_on_launch = true
+  availability_zone = data.aws_availability_zones.available.names[count.index]
+
+  tags = {
+    Name = "mtc_public-${count.index + 1}"
+  }  
+}
+
+resource "aws_subnet" "mtc_private_subnet" {
+  count = length(var.private_cidrs)
+  vpc_id = aws_vpc.mtc_vpc.id
+  cidr_block = var.private_cidrs[count.index]
+  map_public_ip_on_launch = false
+  availability_zone = data.aws_availability_zones.available.names[count.index]
+
+  tags = {
+    Name = "mtc_private-${count.index + 1}"
+  }  
+}
