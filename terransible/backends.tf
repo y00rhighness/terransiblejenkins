@@ -1,10 +1,10 @@
-terraform { 
-  cloud { 
-    
-    organization = "y00rhighness-mtc-terransible" 
+terraform {
+  cloud {
 
-    workspaces { 
-      name = "terransible" 
-    } 
-  } 
+    organization = "y00rhighness-mtc-terransible"
+
+    workspaces {
+      name = "terransible"
+    }
+  }
 }
