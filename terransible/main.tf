@@ -47,7 +47,7 @@ resource "aws_default_route_table" "mtc_private_route" {
 
 
 locals {
-    azs = data.aws_availability_zones.available.names
+  azs = data.aws_availability_zones.available.names
 }
 
 
@@ -57,7 +57,7 @@ data "aws_availability_zones" "available" {
 resource "aws_subnet" "mtc_public_subnet" {
   count                   = length(local.azs)
   vpc_id                  = aws_vpc.mtc_vpc.id
-  cidr_block              = cidrsubnet(var.vpc_cidr,8,count.index)
+  cidr_block              = cidrsubnet(var.vpc_cidr, 8, count.index)
   map_public_ip_on_launch = true
   availability_zone       = local.azs[count.index]
 
@@ -69,7 +69,7 @@ resource "aws_subnet" "mtc_public_subnet" {
 resource "aws_subnet" "mtc_private_subnet" {
   count                   = length(local.azs)
   vpc_id                  = aws_vpc.mtc_vpc.id
-  cidr_block              = cidrsubnet(var.vpc_cidr,8, length(local.azs) + count.index)
+  cidr_block              = cidrsubnet(var.vpc_cidr, 8, length(local.azs) + count.index)
   map_public_ip_on_launch = false
   availability_zone       = local.azs[count.index]
 
@@ -79,31 +79,31 @@ resource "aws_subnet" "mtc_private_subnet" {
 }
 
 resource "aws_route_table_association" "mtc_public_assoc" {
-    count = length(local.azs)
-    subnet_id = aws_subnet.mtc_public_subnet.*.id[count.index]
-    route_table_id = aws_route_table.mtc_public_route.id
+  count          = length(local.azs)
+  subnet_id      = aws_subnet.mtc_public_subnet.*.id[count.index]
+  route_table_id = aws_route_table.mtc_public_route.id
 }
 
 resource "aws_security_group" "mtc_sg" {
-  name = "public_sg"
+  name        = "public_sg"
   description = "Security group for public instances"
-  vpc_id = aws_vpc.mtc_vpc.id
-  }
+  vpc_id      = aws_vpc.mtc_vpc.id
+}
 
 resource "aws_security_group_rule" "ingress_all" {
-  type = "ingress"
-  from_port = 0
-  to_port = 65535
-  protocol = "-1"
-  cidr_blocks = [var.access_ip]
+  type              = "ingress"
+  from_port         = 0
+  to_port           = 65535
+  protocol          = "-1"
+  cidr_blocks       = [var.access_ip]
   security_group_id = aws_security_group.mtc_sg.id
 }
 
 resource "aws_security_group_rule" "egress_all" {
-  type = "egress"
-  from_port = 0
-  to_port = 65535
-  protocol = "-1"
-  cidr_blocks = ["0.0.0.0/0"]
+  type              = "egress"
+  from_port         = 0
+  to_port           = 65535
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.mtc_sg.id
 }

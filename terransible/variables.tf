@@ -4,6 +4,6 @@ variable "vpc_cidr" {
 }
 
 variable "access_ip" {
-  type = string
+  type    = string
   default = "72.24.195.218/32"
 }
